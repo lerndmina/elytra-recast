@@ -13,18 +13,12 @@
   "icon": "assets/elytra-recast/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": [
-      "me.lunaluna.fabric.elytrarecast.Startup"
-    ],
-    "modmenu": [
-      "me.lunaluna.fabric.elytrarecast.compat.modmenu.ModMenuPlugin"
-    ]
+    "client": ["me.lunaluna.fabric.elytrarecast.Startup"],
+    "modmenu": ["me.lunaluna.fabric.elytrarecast.compat.modmenu.ModMenuPlugin"]
   },
-  "mixins": [
-    "elytra-recast.mixins.json"
-  ],
+  "mixins": ["elytra-recast.mixins.json"],
   "depends": {
-    "minecraft": "~${minecraft_version}",
+    "minecraft": "${supported_minecraft_versions}",
     "fabricloader": ">=${loader_version}"
   },
   "suggests": {
