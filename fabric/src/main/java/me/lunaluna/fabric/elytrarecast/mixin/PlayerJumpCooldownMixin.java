@@ -3,9 +3,9 @@ package me.lunaluna.fabric.elytrarecast.mixin;
 import me.lunaluna.fabric.elytrarecast.config.ElytraRecastConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.LivingEntity;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,19 +18,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerJumpCooldownMixin {
 
     @Shadow
-    private int jumpingCooldown;
+    private int noJumpDelay;
 
     @SuppressWarnings("resource")
-    private ClientPlayerEntity player() {
-        return MinecraftClient.getInstance().player;
+    private LocalPlayer player() {
+        return Minecraft.getInstance().player;
     }
 
     @SuppressWarnings("EqualsBetweenInconvertibleTypes")
-    @Inject(method = "tickMovement", at = @At("HEAD"))
+    @Inject(method = "aiStep", at = @At("HEAD"))
     public void reduceCooldown(CallbackInfo ci) {
-        if (ElytraRecastConfig.jumpEnabled && (jumpingCooldown > ElytraRecastConfig.jumpCooldown)
+        if (ElytraRecastConfig.jumpEnabled && (noJumpDelay > ElytraRecastConfig.jumpCooldown)
                 && equals(player())) {
-            jumpingCooldown = ElytraRecastConfig.jumpCooldown;
+            noJumpDelay = ElytraRecastConfig.jumpCooldown;
         }
     }
 }

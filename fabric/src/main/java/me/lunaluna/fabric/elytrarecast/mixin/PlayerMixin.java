@@ -3,11 +3,11 @@ package me.lunaluna.fabric.elytrarecast.mixin;
 import me.lunaluna.fabric.elytrarecast.ElytraHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,8 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Environment(EnvType.CLIENT)
 abstract class PlayerMixin {
 
-    private ClientPlayerEntity player() {
-        return MinecraftClient.getInstance().player;
+    private LocalPlayer player() {
+        return Minecraft.getInstance().player;
     }
 
     @Unique
@@ -29,17 +29,17 @@ abstract class PlayerMixin {
     private boolean awaitingElytra = false;
 
     @SuppressWarnings("ConstantConditions")
-    @Inject(method = "tickMovement", at = @At("TAIL"))
+    @Inject(method = "aiStep", at = @At("TAIL"))
     public void recastIfLanded(CallbackInfo ci) {
-        if (player() == null || !((Object) this instanceof ClientPlayerEntity))
+        if (player() == null || !((Object) this instanceof LocalPlayer))
             return;
-        boolean elytra = isGliding();
+        boolean elytra = isFallFlying();
         if (awaitingElytra) {
             if (elytra)
                 awaitingElytra = false;
         } else if (!elytra && previousElytra) {
-            MinecraftClient.getInstance().getSoundManager().stopSounds(SoundEvents.ITEM_ELYTRA_FLYING.id(),
-                    SoundCategory.PLAYERS);
+            Minecraft.getInstance().getSoundManager().stop(SoundEvents.ELYTRA_FLYING.location(),
+                    SoundSource.PLAYERS);
             ElytraHelper.castElytra(player());
             awaitingElytra = ElytraHelper.checkElytra(player());
         }
@@ -47,5 +47,5 @@ abstract class PlayerMixin {
     }
 
     @Shadow
-    public abstract boolean isGliding();
+    public abstract boolean isFallFlying();
 }

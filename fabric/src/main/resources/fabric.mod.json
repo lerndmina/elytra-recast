@@ -19,7 +19,8 @@
   "mixins": ["elytra-recast.mixins.json"],
   "depends": {
     "minecraft": "${supported_minecraft_versions}",
-    "fabricloader": ">=${loader_version}"
+    "fabricloader": ">=${loader_version}",
+    "java": ">=25"
   },
   "suggests": {
     "cloth-config": ">=${cloth_config_version}",

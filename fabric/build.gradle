@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.15.4'
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
 
 group 'me.lunaluna.elytra-recast'
@@ -11,20 +11,14 @@ repositories {
 }
 
 dependencies {
-    // Fabric Required
     minecraft "com.mojang:minecraft:$minecraft_version"
-    mappings "net.fabricmc:yarn:$yarn_mappings:v2"
-    modImplementation "net.fabricmc:fabric-loader:$loader_version"
-    // ModMenu
-    modCompileOnly "com.terraformersmc:modmenu:$mod_menu_version"
+    implementation "net.fabricmc:fabric-loader:$loader_version"
 
-    // Cloth Config
-    modApi("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
+    compileOnly "com.terraformersmc:modmenu:$mod_menu_version"
+
+    implementation("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
         exclude(group: "net.fabricmc.fabric-api")
     }
-
-    // Gson
-    implementation "com.google.code.gson:gson:$gson_version"
 }
 
 processResources {
